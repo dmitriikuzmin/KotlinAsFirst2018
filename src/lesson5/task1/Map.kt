@@ -279,10 +279,12 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     var c = -1
+    val list = chars.toMutableList()
+    chars.forEach { list.add(it.toLowerCase()) }
 
     return if (word.isEmpty()) true else {
         for (i in 0 until word.length) {
-            if (chars.contains(word[i].toLowerCase())) {
+            if (list.contains(word[i].toLowerCase())) {
                 c++
                 continue
             } else {
@@ -290,7 +292,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
                 break
             }
         }
-        return word[c].toLowerCase() in chars
+        return word[c].toLowerCase() in list
     }
 }
 
@@ -365,7 +367,7 @@ fun hasAnagrams(words: List<String>): Boolean {
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    var c = 0
+    var c = -2
     val set = list.filter { it >= number - list.max()!! && it <= number }.toSet()
 
     for (element in set) {
@@ -376,7 +378,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
             continue
         }
     }
-    return if (c != list.max() && list.isNotEmpty() && list.indexOf(c) != list.indexOf(number - c))
+    return if (c != list.max() && c != -2 && list.isNotEmpty() && list.indexOf(c) != list.indexOf(number - c))
         Pair(list.indexOf(c), list.indexOf(number - c)) else Pair(-1, -1)
 }
 
