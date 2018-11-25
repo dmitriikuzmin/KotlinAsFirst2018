@@ -379,6 +379,10 @@ class Tests {
                 Pair(-1, -1),
                 findSumOfTwo(listOf(1, 37563, 40699, 2, 25182, 40700, 40700, 38587, 7020, 35619), 2)
         )
+        assertEquals(
+                Pair(-1, -1),
+                findSumOfTwo(listOf(2, 2, 2, 2), 2)
+        )
     }
 
     @Test

@@ -369,7 +369,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     val set = list.filter { it >= number - list.max()!! && it <= number }.toSet()
 
     for (element in set) {
-        if (set.contains(number - element)) {
+        if (set.contains(number - element) || set.size == 1) {
             c = element
             break
         } else {
