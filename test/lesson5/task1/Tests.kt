@@ -345,6 +345,7 @@ class Tests {
         assertTrue(hasAnagrams(listOf("рот", "свет", "тор")))
         assertFalse(hasAnagrams(listOf("рот", "свет", "код", "дверь")))
         assertTrue(hasAnagrams(listOf("", "]", " 6Zu`", "", "V", "")))
+        assertFalse(hasAnagrams(listOf("qw\nDq3q:-bGP\\&PkgRW")))
     }
 
     @Test
@@ -389,6 +390,12 @@ class Tests {
         assertEquals(
                 Pair(-1, -1),
                 findSumOfTwo(listOf(40700, 0, 0, 1, 33686, 47575), 53016)
+        )
+        assertEquals(
+                Pair(8, 10),
+                findSumOfTwo(listOf(37336, 7057, 40699, 37118, 40699, 40699, 40699, 10051, 0, 40700, 0, 39369, 40699,
+                        0, 0, 31394, 40699, 1, 30198, 7554, 40700, 9564, 40700, 20092, 40699, 40699, 41411, 40700, 7176,
+                        29224, 30205, 42040), 0)
         )
     }
 
