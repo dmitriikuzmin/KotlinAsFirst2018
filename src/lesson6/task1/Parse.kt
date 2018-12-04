@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
+
 /**
  * Пример
  *
@@ -49,12 +51,10 @@ fun main(args: Array<String>) {
         val seconds = timeStrToSeconds(line)
         if (seconds == -1) {
             println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
-        }
-        else {
+        } else {
             println("Прошло секунд с начала суток: $seconds")
         }
-    }
-    else {
+    } else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
     }
 }
@@ -71,7 +71,20 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val parts = str.split(" ")
+    val map = mapOf("января" to 1, "февраля" to 2, "марта" to 3, "апреля" to 4, "мая" to 5, "июня" to 6, "июля" to 7,
+            "августа" to 8, "сентября" to 9, "октября" to 10, "ноября" to 11, "декабря" to 12)
+
+    return try {
+        if (parts.size == 3 && map.contains(parts[1])
+                && daysInMonth(map[parts[1]]!!, parts[2].toInt()) >= parts[0].toInt()) {
+            String.format("%02d.%02d.%02d", parts[0].toInt(), map[parts[1]], parts[2].toInt())
+        } else ""
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+}
 
 /**
  * Средняя
@@ -97,7 +110,13 @@ fun dateDigitToStr(digital: String): String = TODO()
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String =
+        if (phone.contains(regex = Regex("[^0-9()+\\-\\s]"))) {
+            ""
+        } else {
+            phone.filterNot { it -> "-()\\s ".contains(it) }
+        }
+
 
 /**
  * Средняя
@@ -121,7 +140,15 @@ fun bestLongJump(jumps: String): Int = TODO()
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int =
+        if (jumps.contains(regex = Regex("[^0-9+%\\-\\s]"))) {
+            -1
+        } else {
+            val parts = jumps.split("+")
+            var size = parts[0].filter { it -> "0123456789".contains(it) }.length
+            var result = parts[parts.size - 2].filter { it -> "0123456789 ".contains(it) }.trim()
+            result.takeLast(size).toInt()
+        }
 
 /**
  * Сложная
@@ -143,7 +170,23 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    var words = str.split(" ")
+    var result = 0
+
+    if (words.size == 1) return -1 else {
+        for (i in 0 until words.size - 1) {
+            if (words[i].equals(words[i + 1], true)) {
+                result
+                break
+            } else {
+                result += words[i].length + 1
+                continue
+            }
+        }
+    }
+    return if (result + words[words.size - 1].length != str.length) result else -1
+}
 
 /**
  * Сложная
@@ -156,7 +199,22 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    var entry = description.split(";")
+    var mapOfFood = mapOf<String, Double>()
+
+    return try {
+        entry.forEach {
+            mapOfFood +=
+                    Pair(it.trim().substringBefore(" "), it.trim().substringAfter(" ").toDouble())
+            if (it.trim().substringBefore(" ") == it.trim().substringAfter(" "))
+                throw NumberFormatException()
+        }
+        mapOfFood.maxBy { it.value }!!.key
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+}
 
 /**
  * Сложная
@@ -207,4 +265,56 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    var currentCell = cells / 2
+    var result = List(cells) { 0 }.toMutableList()
+    var i = 0
+
+    if (commands.contains(regex = Regex("[^<>+\\[\\]\\-\\s]"))
+            || (commands.count { it == '[' } != commands.count { it == ']' })) {
+        throw IllegalArgumentException()
+    } else {
+        while (i != minOf(commands.length, limit)) {
+            when {
+                currentCell > cells - 1 -> throw IllegalStateException()
+                commands[i] == '>' -> {
+                    currentCell++; i++
+                }
+                commands[i] == '<' -> {
+                    currentCell--; i++
+                }
+                commands[i] == '+' -> {
+                    result[currentCell] += 1; i++
+                }
+                commands[i] == '-' -> {
+                    result[currentCell] -= 1; i++
+                }
+                commands[i] == ' ' -> i++
+                commands[i] == '[' && result[currentCell] == 0 -> while (result[currentCell] != 0) {
+
+                }
+                commands[i] == ']' && result[currentCell] != 0 -> i = commands.indexOf('[') + 1
+                commands[i] == '[' && result[currentCell] != 0 -> i++
+                commands[i] == ']' && result[currentCell] == 0 -> i++
+            }
+        }
+    }
+    return result
+}
+
+/*
+for (i in 0 until minOf(commands.length, limit)) {
+            when {
+                currentCell > cells - 1 -> throw IllegalStateException()
+                commands[i] == '>' -> currentCell++
+                commands[i] == '<' -> currentCell--
+                commands[i] == '+' -> result[currentCell] += 1
+                commands[i] == '-' -> result[currentCell] -= 1
+                //commands[i] == '[' && result[currentCell] == 0 ->
+                //commands[i] == ']' && result[currentCell] != 0 /->
+            }
+        }
+    }
+    return result
+}
+ */
