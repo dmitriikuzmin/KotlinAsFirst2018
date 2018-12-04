@@ -100,7 +100,9 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
     val map = mapB.toMutableMap()
 
     for ((first, second) in mapA) {
-        if ((mapA[first] == mapB[first]) || (!mapB.containsKey(first))) map[first] = mapA.getOrDefault(first, "") else {
+        if ((mapA[first] == mapB[first]) || (!mapB.containsKey(first)))
+            map[first] = mapA.getOrDefault(first, "")
+        else {
             map[first] = mapA.getOrDefault(first, "") + ", " + mapB.getOrDefault(first, "")
         }
     }
@@ -167,13 +169,8 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    val check = stuff.filter { it.value.first == kind }
-
-    return if (check.isNotEmpty()) {
-        (check.minBy { it.value.second })!!.key
-    } else null
-}
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? =
+        stuff.filter { it.value.first == kind }.minBy { it.value.second }?.key
 
 /**
  * Сложная
@@ -252,12 +249,11 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.intersect(b
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    var setOfChars = chars.toSet()
+    var setOfChars = chars.toMutableSet()
 
-    chars.forEach { setOfChars += it.toLowerCase() }
-    chars.forEach { setOfChars += it.toUpperCase() }
+    chars.forEach { setOfChars.add(it.toLowerCase()) }
 
-    return setOfChars.containsAll(word.toSet())
+    return setOfChars.containsAll(word.toLowerCase().toSet())
 }
 
 /**
