@@ -101,9 +101,9 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
 
     for ((first, second) in mapA) {
         if ((mapA[first] == mapB[first]) || (!mapB.containsKey(first)))
-            map[first] = mapA.getOrDefault(first, "")
+            map[first] = second
         else {
-            map[first] = mapA.getOrDefault(first, "") + ", " + mapB.getOrDefault(first, "")
+            map[first] = mapA[first] + ", " + mapB[first]
         }
     }
     return map
@@ -249,7 +249,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.intersect(b
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    var setOfChars = chars.toMutableSet()
+    val setOfChars = chars.toMutableSet()
 
     chars.forEach { setOfChars.add(it.toLowerCase()) }
 
@@ -288,7 +288,10 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean {
+fun hasAnagrams(words: List<String>): Boolean = TODO()
+// Не понял как починить, сделаю позже
+/*
+{
     var listOfWord = listOf<String>()
     var set = setOf<String>()
 
@@ -305,6 +308,7 @@ fun hasAnagrams(words: List<String>): Boolean {
     }
     return set.containsAll(listOfWord)
 }
+*/
 
 /**
  * Сложная
@@ -324,27 +328,18 @@ fun hasAnagrams(words: List<String>): Boolean {
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    var c = Pair(-1, -1)
-    val numbers = list.filter { it >= number - list.max()!! && it <= number }.toSet()
-    val specs = mutableMapOf<Int, Pair<Int, Int>>()
+    var result = Pair(-1, -1)
+    val specs = mutableMapOf<Int, Int>()
 
-    for (element in numbers) {
-        specs[element] = Pair(number - element, list.filter { it == element }.size)
+    for (elem in list.withIndex()) {
+        if (specs.contains(number - elem.value)) {
+            result = Pair(specs[number - elem.value]!!, elem.index)
+            break
+        } else if (!specs.contains(elem.value)) {
+            specs[elem.value] = elem.index
+        }
     }
-
-    for ((key, value) in specs) {
-        if (numbers.contains(specs[key]!!.first)) {
-            if (key != value.first || value.second > 1) {
-                c = Pair(list.indexOf(key), list.indexOf(value.first))
-                if (list.indexOf(key) == list.indexOf(value.first)) {
-                    val subList = list.subList(list.indexOf(value.first) + 1, list.size)
-                    c = Pair(list.indexOf(key), subList.indexOf(value.first) + list.indexOf(value.first) + 1)
-                }
-                break
-            }
-        } else continue
-    }
-    return c
+    return result
 }
 
 /**
