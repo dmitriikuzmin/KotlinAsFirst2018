@@ -78,7 +78,8 @@ fun dateStrToDigit(str: String): String {
 
     return try {
         if (parts.size == 3 && map.contains(parts[1])
-                && daysInMonth(map[parts[1]]!!, parts[2].toInt()) >= parts[0].toInt()) {
+                && daysInMonth(map[parts[1]]!!, parts[2].toInt()) >= parts[0].toInt()
+                && parts[0].toInt() > 0 && parts[2].toInt() > 0) {
             String.format("%02d.%02d.%02d", parts[0].toInt(), map[parts[1]], parts[2].toInt())
         } else ""
     } catch (e: NumberFormatException) {
@@ -145,8 +146,8 @@ fun bestHighJump(jumps: String): Int =
             -1
         } else {
             val parts = jumps.split("+")
-            var size = parts[0].filter { it -> "0123456789".contains(it) }.length
-            var result = parts[parts.size - 2].filter { it -> "0123456789 ".contains(it) }.trim()
+            val size = parts[0].filter { it -> "0123456789".contains(it) }.length
+            val result = parts[parts.size - 2].filter { it -> "0123456789 ".contains(it) }.trim()
             result.takeLast(size).toInt()
         }
 
@@ -171,13 +172,12 @@ fun plusMinus(expression: String): Int = TODO()
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    var words = str.split(" ")
+    val words = str.split(" ")
     var result = 0
 
     if (words.size == 1) return -1 else {
         for (i in 0 until words.size - 1) {
             if (words[i].equals(words[i + 1], true)) {
-                result
                 break
             } else {
                 result += words[i].length + 1
@@ -200,7 +200,7 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше либо равны нуля.
  */
 fun mostExpensive(description: String): String {
-    var entry = description.split(";")
+    val entry = description.split(";")
     var mapOfFood = mapOf<String, Double>()
 
     return try {
@@ -265,56 +265,25 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+/*
     var currentCell = cells / 2
     var result = List(cells) { 0 }.toMutableList()
-    var i = 0
 
     if (commands.contains(regex = Regex("[^<>+\\[\\]\\-\\s]"))
             || (commands.count { it == '[' } != commands.count { it == ']' })) {
         throw IllegalArgumentException()
     } else {
-        while (i != minOf(commands.length, limit)) {
-            when {
-                currentCell > cells - 1 -> throw IllegalStateException()
-                commands[i] == '>' -> {
-                    currentCell++; i++
-                }
-                commands[i] == '<' -> {
-                    currentCell--; i++
-                }
-                commands[i] == '+' -> {
-                    result[currentCell] += 1; i++
-                }
-                commands[i] == '-' -> {
-                    result[currentCell] -= 1; i++
-                }
-                commands[i] == ' ' -> i++
-                commands[i] == '[' && result[currentCell] == 0 -> while (result[currentCell] != 0) {
-
-                }
-                commands[i] == ']' && result[currentCell] != 0 -> i = commands.indexOf('[') + 1
-                commands[i] == '[' && result[currentCell] != 0 -> i++
-                commands[i] == ']' && result[currentCell] == 0 -> i++
-            }
-        }
-    }
-    return result
-}
-
-/*
-for (i in 0 until minOf(commands.length, limit)) {
+        for (i in 0..minOf(commands.length, limit)) {
             when {
                 currentCell > cells - 1 -> throw IllegalStateException()
                 commands[i] == '>' -> currentCell++
                 commands[i] == '<' -> currentCell--
                 commands[i] == '+' -> result[currentCell] += 1
                 commands[i] == '-' -> result[currentCell] -= 1
-                //commands[i] == '[' && result[currentCell] == 0 ->
-                //commands[i] == ']' && result[currentCell] != 0 /->
             }
         }
     }
     return result
 }
- */
+*/
