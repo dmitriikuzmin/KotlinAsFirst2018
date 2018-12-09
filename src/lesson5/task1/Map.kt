@@ -248,13 +248,8 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.intersect(b
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    val setOfChars = chars.toMutableSet()
-
-    chars.forEach { setOfChars.add(it.toLowerCase()) }
-
-    return setOfChars.containsAll(word.toLowerCase().toSet())
-}
+fun canBuildFrom(chars: List<Char>, word: String): Boolean =
+        chars.map { it -> it.toLowerCase() }.containsAll(word.toLowerCase().toSet())
 
 /**
  * Средняя
@@ -288,27 +283,13 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
-// Не понял как починить, сделаю позже
-/*
-{
-    var listOfWord = listOf<String>()
-    var set = setOf<String>()
+fun hasAnagrams(words: List<String>): Boolean {
+    val result = mutableSetOf<String>()
 
-    if (words.isEmpty()) return false else {
-        for (i in 0 until words.size) {
-            listOfWord = words[i].chunked(1)
-            if (set.containsAll(listOfWord) || i == words.size - 1) {
-                break
-            } else {
-                set += words[i].chunked(1)
-                continue
-            }
-        }
-    }
-    return set.containsAll(listOfWord)
+    words.forEach { result.add(it.toCharArray().sorted().toString()) }
+
+    return words.size != result.size
 }
-*/
 
 /**
  * Сложная
