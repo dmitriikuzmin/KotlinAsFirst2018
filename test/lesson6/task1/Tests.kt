@@ -44,6 +44,9 @@ class Tests {
         assertEquals("", dateStrToDigit("aa февраля 1993"))
         assertEquals("", dateStrToDigit("-100 февраля 1993"))
         assertEquals("", dateStrToDigit("15 февраля -100"))
+        assertEquals("02.02.2", dateStrToDigit("02 февраля 2"))
+        assertEquals("02.02.10", dateStrToDigit("02 февраля 10"))
+        assertEquals("", dateStrToDigit("02 вцфвфц 10"))
     }
 
     @Test
@@ -68,6 +71,8 @@ class Tests {
         assertEquals("", flattenPhoneNumber("134_+874"))
         assertEquals("", flattenPhoneNumber("+-*7^&%45748"))
         assertEquals("43+42", flattenPhoneNumber("43+-42"))
+        assertEquals("", flattenPhoneNumber("\t"))
+        assertEquals("", flattenPhoneNumber("\n"))
     }
 
     @Test
@@ -83,12 +88,18 @@ class Tests {
     @Test
     @Tag("Hard")
     fun bestHighJump() {
+        assertEquals(170721053,
+                bestHighJump("72197244 %+ 0 %+ 147483648 %%+ 1 %%+ 170721053 %%+ 0 %%+ 147483648 %%- 0 %-"))
         assertEquals(230, bestHighJump("220 + 224 %+ 228 %- 230 + 232 %%- 234 %"))
         assertEquals(226, bestHighJump("226 +"))
         assertEquals(230, bestHighJump("220 + 224 %+ 228 %- 230 -+ 232 %%- 234 %"))
         assertEquals(1040, bestHighJump("1000 + 1020 %+ 1030 %- 1040 -+ 1050 %%- 1060 %"))
         assertEquals(230, bestHighJump("220 + 224 %+ 228 - 229 - 230 + 232 %%- 234 %"))
         assertEquals(-1, bestHighJump("???"))
+        assertEquals(-1, bestHighJump(""))
+        assertEquals(-1, bestHighJump("226"))
+        assertEquals(-1, bestHighJump("226 --%"))
+        assertEquals(-1, bestHighJump("226 --%+ \t"))
     }
 
     @Test
@@ -143,9 +154,10 @@ class Tests {
     @Test
     @Tag("Impossible")
     fun computeDeviceCells() {
-        assertEquals(listOf(1, 1, 1, 1, 1, 0, 0, 0, 0, 0), computeDeviceCells(10, "- <<<<< +[>+]", 10000))
+        assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "]]]]][[[[[<]< +[>+]]", 10000) }
         assertEquals(listOf(0, 0, 0, 0, 0, 1, 1, 1, 1, 1), computeDeviceCells(10, "+>+>+>+>+", 10000))
         assertEquals(listOf(-1, -1, -1, -1, -1, 0, 0, 0, 0, 0), computeDeviceCells(10, "<-<-<-<-<-", 10000))
+        assertEquals(listOf(1, 1, 1, 1, 1, 0, 0, 0, 0, 0), computeDeviceCells(10, "- <<<<< +[>+]", 10000))
         assertEquals(listOf(0, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0),
                 computeDeviceCells(11, "<<<<< + >>>>>>>>>> --[<-] >+[>+] >++[--< <[<] >+[>+] >++]", 10000))
         assertEquals(listOf(0, 0, 0, 0, 0, 1, 1, 0, 0, 0), computeDeviceCells(10, "+>+>+>+>+", 4))
@@ -156,5 +168,20 @@ class Tests {
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "===", 3) }
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "+>+>[+>", 3) }
         assertThrows(IllegalStateException::class.java) { computeDeviceCells(20, ">>>>>>>>>>>>>", 12) }
+        assertEquals(listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0), computeDeviceCells(10, "", 10000))
+    }
+
+    @Test
+    @Tag("My")
+    fun bracket() {
+        assertEquals(mapOf(12 to 9), bracket("- <<<<< +[>+]"))
+        assertEquals(mapOf(24 to 21, 31 to 28, 44 to 42, 51 to 48, 56 to 36),
+                bracket("<<<<< + >>>>>>>>>> --[<-] >+[>+] >++[--< <[<] >+[>+] >++]"))
+        assertThrows(IllegalArgumentException::class.java) { bracket("- <<<][[<]< +[>+]") }
+        assertThrows(IllegalArgumentException::class.java) { bracket("]]]]][[[[[<]< +[>+]]") }
+        assertThrows(IllegalArgumentException::class.java) { bracket("[][][][]]]][[][]]][[]]") }
+        assertThrows(IllegalArgumentException::class.java) { bracket("") }
+        assertThrows(IllegalArgumentException::class.java) { bracket("][") }
+        assertThrows(IllegalArgumentException::class.java) { bracket("\t") }
     }
 }
