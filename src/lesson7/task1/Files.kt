@@ -32,8 +32,7 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
                 if (word.length + currentLineLength >= lineLength) {
                     outputStream.newLine()
                     currentLineLength = 0
-                }
-                else {
+                } else {
                     outputStream.write(" ")
                     currentLineLength++
                 }
@@ -54,8 +53,21 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    val map = mutableMapOf<String, Int>()
 
+    for (elem in substrings) {
+        for (line in File(inputName).readLines()) {
+            if (line.contains(elem, ignoreCase = true)) {
+                if (elem in map) {
+                    map[elem] = map[elem]!! + line.split(elem, ignoreCase = true).size - 1
+                } else map[elem] = 1
+            }
+        }
+        if (!map.contains(elem)) map[elem] = 0
+    }
+    return map
+}
 
 /**
  * Средняя
@@ -123,7 +135,31 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    var str = ""
+    var max = 0
+
+    for (line in File(inputName).readLines()) {
+        if (line.trim().length > max) max = line.trim().length
+    }
+
+    for (line in File(inputName).readLines()) {
+        val niceLine = line.trim()
+        if (niceLine.contains(" ")) {
+            val wordList = niceLine.split(" ")
+            val result = (max - niceLine.length) / (wordList.size - 1) + 1
+            var remainder = (max - niceLine.length) % (wordList.size - 1)
+
+            for (i in 0 until wordList.size) {
+                str += wordList[i] + " ".repeat(if (remainder > 0) result + 1 else result)
+                remainder--
+            }
+        } else str = niceLine
+        outputStream.write(str.trim())
+        outputStream.newLine()
+        str = ""
+    }
+    outputStream.close()
 }
 
 /**
@@ -294,21 +330,21 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  *
  * Пример входного файла:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
-* Утка по-пекински
-    * Утка
-    * Соус
-* Салат Оливье
-    1. Мясо
-        * Или колбаса
-    2. Майонез
-    3. Картофель
-    4. Что-то там ещё
-* Помидоры
-* Фрукты
-    1. Бананы
-    23. Яблоки
-        1. Красные
-        2. Зелёные
+ * Утка по-пекински
+ * Утка
+ * Соус
+ * Салат Оливье
+1. Мясо
+ * Или колбаса
+2. Майонез
+3. Картофель
+4. Что-то там ещё
+ * Помидоры
+ * Фрукты
+1. Бананы
+23. Яблоки
+1. Красные
+2. Зелёные
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  *
  *

@@ -79,7 +79,7 @@ fun dateStrToDigit(str: String): String {
     return try {
         if (parts.size == 3 && map.contains(parts[1])
                 && daysInMonth(map[parts[1]]!!, parts[2].toInt()) >= parts[0].toInt()
-                && parts[0].toInt() > 0 && parts[2].toInt() > 0) {
+                && parts[0].toInt() > 0 && parts[2].toInt() >= 0) {
             String.format("%02d.%02d.%d", parts[0].toInt(), map[parts[1]], parts[2].toInt())
         } else ""
     } catch (e: NumberFormatException) {
@@ -177,13 +177,13 @@ fun firstDuplicateIndex(str: String): Int {
     val words = str.split(" ")
     var result = 0
 
-    if (words.size == 1) return -1 else {
+    if (words.size == 1) return -1
+    else {
         for (i in 0 until words.size - 1) {
             if (words[i].equals(words[i + 1], true)) {
                 break
             } else {
                 result += words[i].length + 1
-                continue
             }
         }
     }
@@ -207,10 +207,9 @@ fun mostExpensive(description: String): String {
 
     return try {
         entry.forEach {
-            mapOfFood +=
-                    Pair(it.trim().substringBefore(" "), it.trim().substringAfter(" ").toDouble())
-            if (it.trim().substringBefore(" ") == it.trim().substringAfter(" "))
-                throw NumberFormatException()
+            val entryList = it.trim().split(" ")
+            if (entryList.size != 2 || entryList[0] == entryList[1]) throw NumberFormatException()
+            mapOfFood += Pair(entryList[0], entryList[1].toDouble())
         }
         mapOfFood.maxBy { it.value }!!.key
     } catch (e: NumberFormatException) {
@@ -267,7 +266,9 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+/*
+{
     // Это черновой вариант для проверки правильной работы. Позже я переделаю
     var currentCell = cells / 2
     val result = List(cells) { 0 }.toMutableList()
@@ -317,6 +318,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
 fun bracket(commands: String): Map<Int, Int> {
     var i = 0
     val brackets = mutableMapOf<Int, Int>()
+    var c = 0
 
     if (commands.indexOf(']') < commands.indexOf('[')
             || commands.indexOfLast { it == '[' } > commands.indexOfLast { it == '[' }
@@ -329,6 +331,7 @@ fun bracket(commands: String): Map<Int, Int> {
                 val nextBracket = commands.indexOf(']', i)
                 if (brackets.contains(nextBracket)) {
                     brackets[commands.indexOf(']', nextBracket + 1)] = brackets[nextBracket]!!
+                    brackets[nextBracket] = i
                 }
                 brackets[nextBracket] = i
                 i++
@@ -339,3 +342,4 @@ fun bracket(commands: String): Map<Int, Int> {
     return if (commands.count { it == '[' || it == ']' } == brackets.size * 2) brackets
     else throw IllegalArgumentException()
 }
+*/
