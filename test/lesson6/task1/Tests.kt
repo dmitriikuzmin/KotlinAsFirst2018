@@ -47,6 +47,8 @@ class Tests {
         assertEquals("02.02.2", dateStrToDigit("02 февраля 2"))
         assertEquals("02.02.10", dateStrToDigit("02 февраля 10"))
         assertEquals("", dateStrToDigit("02 вцфвфц 10"))
+        assertEquals("02.02.0", dateStrToDigit("02 февраля 0"))
+        assertEquals("29.02.0", dateStrToDigit("29 февраля 0"))
     }
 
     @Test
@@ -168,9 +170,14 @@ class Tests {
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "===", 3) }
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "+>+>[+>", 3) }
         assertThrows(IllegalStateException::class.java) { computeDeviceCells(20, ">>>>>>>>>>>>>", 12) }
-        assertEquals(listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0), computeDeviceCells(10, "", 10000))
+        assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "", 10000) }
+        assertThrows(IllegalStateException::class.java) {
+            computeDeviceCells(123,
+                    "->>---- [--++->+ ->---+-<+[--+>->+[+-+<+<->>+<-+-+<+<[<-]+]+[-]>-<<>+---<--+][ -<<[++--<+  <++-+-+-+<<<<++[-+<>-> <[[[++<+---<<---<-<---<+-- +><--[< -->-[<][- >+<<-<<+--<]-<[]>]>-<[+ ]] <<[- <-<<-<><<-+<+<-]]]]]]]",
+                    10000)
+        }
     }
-
+/*
     @Test
     @Tag("My")
     fun bracket() {
@@ -183,5 +190,8 @@ class Tests {
         assertThrows(IllegalArgumentException::class.java) { bracket("") }
         assertThrows(IllegalArgumentException::class.java) { bracket("][") }
         assertThrows(IllegalArgumentException::class.java) { bracket("\t") }
+        assertEquals(mapOf(24 to 21, 31 to 28, 44 to 42, 51 to 48, 56 to 36),
+                bracket("->>---- [--++->+ ->---+-<+[--+>->+[+-+<+<->>+<-+-+<+<[<-]+]+[-]>-<<>+---<--+][ -<<[++--<+  <++-+-+-+<<<<++[-+<>-> <[[[++<+---<<---<-<---<+-- +><--[< -->-[<][- >+<<-<<+--<]-<[]>]>-<[+ ]] <<[- <-<<-<><<-+<+<-]]]]]]]"))
     }
+    */
 }
