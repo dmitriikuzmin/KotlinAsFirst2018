@@ -56,15 +56,15 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val map = mutableMapOf<String, Int>()
 
-    for (elem in substrings) {
-        for (line in File(inputName).readLines()) {
+    for (line in File(inputName).readLines()) {
+        for (elem in substrings) {
             if (line.contains(elem, ignoreCase = true)) {
                 if (elem in map) {
                     map[elem] = map[elem]!! + line.split(elem, ignoreCase = true).size - 1
-                } else map[elem] = 1
+                } else map[elem] = line.split(elem, ignoreCase = true).size - 1
             }
+            if (!map.contains(elem)) map[elem] = 0
         }
-        if (!map.contains(elem)) map[elem] = 0
     }
     return map
 }
@@ -145,10 +145,10 @@ fun alignFileByWidth(inputName: String, outputName: String) {
 
     for (line in File(inputName).readLines()) {
         val niceLine = line.trim()
-        if (niceLine.contains(" ")) {
-            val wordList = niceLine.split(" ")
-            val result = (max - niceLine.length) / (wordList.size - 1) + 1
-            var remainder = (max - niceLine.length) % (wordList.size - 1)
+        if (niceLine.contains(" ") && line.length != max) {
+            val wordList = niceLine.split(Regex("\\s+"))
+            val result = (max - niceLine.length + niceLine.count { it == ' ' }) / (wordList.size - 1)
+            var remainder = (max - niceLine.length + niceLine.count { it == ' ' }) % (wordList.size - 1)
 
             for (i in 0 until wordList.size) {
                 str += wordList[i] + " ".repeat(if (remainder > 0) result + 1 else result)
