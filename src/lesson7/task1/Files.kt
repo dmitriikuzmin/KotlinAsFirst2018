@@ -57,7 +57,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     val map = mutableMapOf<String, Int>()
 
     for (line in File(inputName).readLines()) {
-        for (elem in substrings) {
+        for (elem in substrings.toSet()) {
             if (line.contains(elem, ignoreCase = true)) {
                 if (elem in map) {
                     map[elem] = map[elem]!! + line.split(elem, ignoreCase = true).size - 1
