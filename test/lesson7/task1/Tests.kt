@@ -62,6 +62,8 @@ Basic, Ruby, Swift.
                 countSubstrings("input/substrings_in1.txt", listOf("РАЗНЫЕ", "ные", "Неряшливость", "е", "эволюция")))
         assertEquals(mapOf("Карминовый" to 2, "Некрасивый" to 2, "белоглазый" to 1),
                 countSubstrings("input/substrings_in1.txt", listOf("Карминовый", "Некрасивый", "белоглазый")))
+        assertEquals(mapOf("бббо" to 2),
+                countSubstrings("input/substrings_in2.txt", listOf("бббо")))
     }
 
     @Test
@@ -127,7 +129,12 @@ Basic, Ruby, Swift.
 2)  Число  пробелов  между  более  левой  парой  соседних  слов  должно  быть  больше или равно числу пробелов
 между                более               правой               парой               соседних               слов.""")
         File("temp.txt").delete()
-
+        alignFileByWidth("input/width_in2.txt", "temp.txt")
+        assertFileContent("temp.txt",
+                """один        два        три       с       привет
+холодный
+самая  длинная      строчка    в этом документе""")
+        File("temp.txt").delete()
     }
 
     @Test
