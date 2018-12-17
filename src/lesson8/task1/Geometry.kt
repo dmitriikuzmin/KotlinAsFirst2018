@@ -2,10 +2,7 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * Точка на плоскости
@@ -103,7 +100,22 @@ data class Segment(val begin: Point, val end: Point) {
  * Дано множество точек. Вернуть отрезок, соединяющий две наиболее удалённые из них.
  * Если в множестве менее двух точек, бросить IllegalArgumentException
  */
-fun diameter(vararg points: Point): Segment = TODO()
+fun diameter(vararg points: Point): Segment =
+// placeholder
+        when {
+            points.size < 2 -> throw IllegalArgumentException()
+            points.size == 2 -> Segment(points[0], points[1])
+            else -> {
+                var max = Pair(points[0].distance(points[1]), Segment(points[0], points[1]))
+                for (firstPoint in points) {
+                    for (secondPoint in points) {
+                        if (firstPoint.distance(secondPoint) > max.first)
+                            max = Pair(firstPoint.distance(secondPoint), Segment(firstPoint, secondPoint))
+                    }
+                }
+                max.second
+            }
+        }
 
 /**
  * Простая
