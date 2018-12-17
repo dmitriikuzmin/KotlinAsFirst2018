@@ -144,6 +144,8 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         trueList += elem.split("\\n")
     }
 
+    if (trueList.isEmpty()) return outputStream.close()
+
     val max = trueList.maxBy { it.length }!!.length
 
     for (line in trueList) {
