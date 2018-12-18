@@ -55,15 +55,16 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val map = mutableMapOf<String, Int>()
+    val unique = substrings.toSet()
+    var check = 0
 
     for (line in File(inputName).readLines()) {
-        for (elem in substrings.toSet()) {
-            if (line.contains(elem, ignoreCase = true)) {
-                if (elem in map) {
-                    map[elem] = map[elem]!! + line.split(elem, ignoreCase = true).size - 1
-                } else map[elem] = line.split(elem, ignoreCase = true).size - 1
+        for (elem in unique) {
+            for (i in 0..line.length - elem.length) {
+                if (line.substring(i, i + elem.length).equals(elem, ignoreCase = true)) check++
             }
-            if (!map.contains(elem)) map[elem] = 0
+            map[elem] = map.getOrDefault(elem, 0) + check
+            check = 0
         }
     }
     return map
@@ -135,13 +136,12 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    // улучшу
     val outputStream = File(outputName).bufferedWriter()
     var str = ""
-    var trueList = listOf<String>()
+    var trueList = mutableListOf<String>()
 
     for (elem in File(inputName).readLines().map { it.trim() }) {
-        trueList += elem.split("\\n")
+        trueList.addAll(elem.split("\\n"))
     }
 
     if (trueList.isEmpty()) return outputStream.close()
