@@ -164,7 +164,11 @@ class Line private constructor(val b: Double, val angle: Double) {
  */
 fun lineBySegment(s: Segment): Line {
     return if (s.end.x == s.begin.x) Line(s.begin, PI / 2)
-    else Line(s.begin, atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x)))
+    else {
+        val angle = atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x))
+        if (angle >= 0.0) Line(s.begin, angle)
+        else Line(s.begin, PI + angle)
+    }
 }
 
 /**
