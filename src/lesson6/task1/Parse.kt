@@ -112,12 +112,11 @@ fun dateDigitToStr(digital: String): String = TODO()
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String =
-        if (phone.contains(regex = Regex("[^0-9()+ \\-]")) || phone.contains(regex = Regex("\\."))) {
+        if (!phone.contains(regex = Regex("\\d+")) || phone.contains(regex = Regex("(\\.|[^0-9()+ \\-])"))) {
             ""
         } else {
             phone.filterNot { it -> "-()\\s ".contains(it) }
         }
-
 
 /**
  * Средняя
@@ -208,7 +207,7 @@ fun mostExpensive(description: String): String {
     return try {
         entry.forEach {
             val entryList = it.trim().split(" ")
-            if (entryList.size != 2 || entryList[0] == entryList[1]) throw NumberFormatException()
+            if (entryList.size != 2) throw NumberFormatException()
             mapOfFood += Pair(entryList[0], entryList[1].toDouble())
         }
         mapOfFood.maxBy { it.value }!!.key
@@ -266,19 +265,16 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
-/*
-{
-    // Это черновой вариант для проверки правильной работы. Позже я переделаю
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var currentCell = cells / 2
     val result = List(cells) { 0 }.toMutableList()
     var i = 0
-    val brackets = bracket(commands)
+    val brackets = smth(commands)
     var fakeLimit = limit
 
     while (i < minOf(commands.length, limit) && fakeLimit > 0) {
         when {
-            currentCell > cells - 1 -> throw IllegalStateException()
+            currentCell > cells - 1 || currentCell < 0 -> throw IllegalStateException()
             commands[i] == '>' -> {
                 currentCell++
                 i++
@@ -314,32 +310,26 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TO
     return result
 }
 
-
-fun bracket(commands: String): Map<Int, Int> {
-    var i = 0
+fun smth(commands: String): Map<Int, Int> {
     val brackets = mutableMapOf<Int, Int>()
-    var c = 0
+    val list = mutableListOf<Int>()
 
     if (commands.indexOf(']') < commands.indexOf('[')
             || commands.indexOfLast { it == '[' } > commands.indexOfLast { it == '[' }
-            || commands.contains(regex = Regex("[^<>+\\[\\]\\- ]")))
+            || commands.contains(regex = Regex("[^<>+\\[\\]\\- ]"))
+            || commands.isEmpty())
         throw IllegalArgumentException()
 
-    while (i != commands.length) {
+    for (i in 0 until commands.length) {
         when {
-            commands[i] == '[' -> {
-                val nextBracket = commands.indexOf(']', i)
-                if (brackets.contains(nextBracket)) {
-                    brackets[commands.indexOf(']', nextBracket + 1)] = brackets[nextBracket]!!
-                    brackets[nextBracket] = i
-                }
-                brackets[nextBracket] = i
-                i++
+            commands[i] == '[' -> list.add(i)
+            commands[i] == ']' -> {
+                if (list.isEmpty() && commands.indexOf('[', i) > commands.indexOf(']', i)) throw IllegalArgumentException()
+                brackets[i] = list.max()!!
+                list.remove(list.max()!!)
             }
-            else -> i++
         }
     }
     return if (commands.count { it == '[' || it == ']' } == brackets.size * 2) brackets
     else throw IllegalArgumentException()
 }
-*/
