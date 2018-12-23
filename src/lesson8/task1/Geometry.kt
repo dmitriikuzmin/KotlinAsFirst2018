@@ -162,14 +162,16 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line {
-    return if (s.end.x == s.begin.x) Line(s.begin, PI / 2)
-    else {
-        val angle = atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x))
-        if (angle >= 0.0) Line(s.begin, angle)
-        else Line(s.begin, PI + angle)
-    }
-}
+fun lineBySegment(s: Segment): Line =
+        if (s.end.x == s.begin.x) Line(s.begin, PI / 2)
+        else {
+            val angle = atan2(s.end.y - s.begin.y, s.end.x - s.begin.x)
+            when {
+                angle == PI -> Line(s.begin, 0.0)
+                angle < 0.0 -> Line(s.begin, PI + angle)
+                else -> Line(s.begin, angle)
+            }
+        }
 
 /**
  * Средняя
@@ -210,7 +212,15 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
+    val k1 = (b.y - a.y) / (b.x - a.x)
+    val k2 = (c.y - b.y) / (c.x - a.x)
+    val x = (k1 * k2 * (a.y - c.y) + k2 * (a.x + b.x) - k1 * (b.x + c.x)) / (2 * (k2 - k1))
+    val y = -1 / k1 * (x - (a.x + b.x) / 2) + (a.y + b.y) / 2
+    return Circle(Point(x, y), a.distance(Point(x, y)))
+}
+
+
 
 /**
  * Очень сложная

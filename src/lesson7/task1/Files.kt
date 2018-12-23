@@ -56,15 +56,11 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val map = mutableMapOf<String, Int>()
     val unique = substrings.toSet()
-    var check = 0
 
     for (line in File(inputName).readLines()) {
         for (elem in unique) {
-            for (i in 0..line.length - elem.length) {
-                if (line.substring(i, i + elem.length).equals(elem, ignoreCase = true)) check++
-            }
-            map[elem] = map.getOrDefault(elem, 0) + check
-            check = 0
+            val occurrences = Regex("(?=($elem))", RegexOption.IGNORE_CASE).findAll(line).count()
+            map[elem] = map.getOrDefault(elem, 0) + occurrences
         }
     }
     return map
@@ -138,7 +134,7 @@ fun centerFile(inputName: String, outputName: String) {
 fun alignFileByWidth(inputName: String, outputName: String) {
     val outputStream = File(outputName).bufferedWriter()
     var str = ""
-    var trueList = mutableListOf<String>()
+    val trueList = mutableListOf<String>()
 
     for (elem in File(inputName).readLines().map { it.trim() }) {
         trueList.addAll(elem.split("\\n"))

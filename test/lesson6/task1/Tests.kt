@@ -75,6 +75,7 @@ class Tests {
         assertEquals("43+42", flattenPhoneNumber("43+-42"))
         assertEquals("", flattenPhoneNumber("\t"))
         assertEquals("", flattenPhoneNumber("\n"))
+        assertEquals("", flattenPhoneNumber("+"))
     }
 
     @Test
@@ -167,6 +168,7 @@ class Tests {
         assertEquals(listOf(1, 1, 1, 0, 0, -1, 0, 0, 0, 0), computeDeviceCells(10, "- <<<<< +[>+]", 17))
         assertEquals(listOf(0, 6, 5, 4, 3, 2, 1, 0, -1, -1, -2),
                 computeDeviceCells(11, "<<<<< + >>>>>>>>>> --[<-] >+[>+] >++[--< <[<] >+[>+] >++]", 256))
+
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "===", 3) }
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "+>+>[+>", 3) }
         assertThrows(IllegalStateException::class.java) { computeDeviceCells(20, ">>>>>>>>>>>>>", 12) }
@@ -177,21 +179,22 @@ class Tests {
                     10000)
         }
     }
-/*
+
     @Test
     @Tag("My")
-    fun bracket() {
-        assertEquals(mapOf(12 to 9), bracket("- <<<<< +[>+]"))
+    fun smth() {
+        assertEquals(mapOf(12 to 9), smth("- <<<<< +[>+]"))
         assertEquals(mapOf(24 to 21, 31 to 28, 44 to 42, 51 to 48, 56 to 36),
-                bracket("<<<<< + >>>>>>>>>> --[<-] >+[>+] >++[--< <[<] >+[>+] >++]"))
-        assertThrows(IllegalArgumentException::class.java) { bracket("- <<<][[<]< +[>+]") }
-        assertThrows(IllegalArgumentException::class.java) { bracket("]]]]][[[[[<]< +[>+]]") }
-        assertThrows(IllegalArgumentException::class.java) { bracket("[][][][]]]][[][]]][[]]") }
-        assertThrows(IllegalArgumentException::class.java) { bracket("") }
-        assertThrows(IllegalArgumentException::class.java) { bracket("][") }
-        assertThrows(IllegalArgumentException::class.java) { bracket("\t") }
+                smth("<<<<< + >>>>>>>>>> --[<-] >+[>+] >++[--< <[<] >+[>+] >++]"))
+        assertThrows(IllegalArgumentException::class.java) { smth("- <<<][[<]< +[>+]") }
+        assertThrows(IllegalArgumentException::class.java) { smth("]]]]][[[[[<]< +[>+]]") }
+        assertThrows(IllegalArgumentException::class.java) { smth("[][][][]]]][[][]]][[]]") }
+        assertThrows(IllegalArgumentException::class.java) { smth("") }
+        assertThrows(IllegalArgumentException::class.java) { smth("][") }
+        assertThrows(IllegalArgumentException::class.java) { smth("\t") }
         assertEquals(mapOf(24 to 21, 31 to 28, 44 to 42, 51 to 48, 56 to 36),
-                bracket("->>---- [--++->+ ->---+-<+[--+>->+[+-+<+<->>+<-+-+<+<[<-]+]+[-]>-<<>+---<--+][ -<<[++--<+  <++-+-+-+<<<<++[-+<>-> <[[[++<+---<<---<-<---<+-- +><--[< -->-[<][- >+<<-<<+--<]-<[]>]>-<[+ ]] <<[- <-<<-<><<-+<+<-]]]]]]]"))
+                smth("->>---- [--++->+ ->---+-<+[--+>->+[+-+<+<->>+<-+-+<+<[<-]+]+[-]>-<<>+---<--+][ -<<[++--<+  <++-+-+-+<<<<++[-+<>-> <[[[++<+---<<---<-<---<+-- +><--[< -->-[<][- >+<<-<<+--<]-<[]>]>-<[+ ]] <<[- <-<<-<><<-+<+<-]]]]]]]"))
     }
-    */
+
+
 }
