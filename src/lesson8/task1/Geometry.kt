@@ -101,7 +101,6 @@ data class Segment(val begin: Point, val end: Point) {
  * Если в множестве менее двух точек, бросить IllegalArgumentException
  */
 fun diameter(vararg points: Point): Segment =
-// placeholder
         when {
             points.size < 2 -> throw IllegalArgumentException()
             points.size == 2 -> Segment(points[0], points[1])
@@ -185,15 +184,7 @@ fun lineByPoints(a: Point, b: Point): Line = TODO()
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line {
-    val point = Point((a.x + b.x) / 2, (a.y + b.y) / 2)
-
-    if (b.x == a.x) return Line(point, 0.0)
-
-    val angle = PI / 2 - atan((b.y - a.y) / (b.x - a.x))
-
-    return Line(point, angle)
-}
+fun bisectorByPoints(a: Point, b: Point): Line = TODO()
 
 /**
  * Средняя
@@ -212,15 +203,7 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val k1 = (b.y - a.y) / (b.x - a.x)
-    val k2 = (c.y - b.y) / (c.x - a.x)
-    val x = (k1 * k2 * (a.y - c.y) + k2 * (a.x + b.x) - k1 * (b.x + c.x)) / (2 * (k2 - k1))
-    val y = -1 / k1 * (x - (a.x + b.x) / 2) + (a.y + b.y) / 2
-    return Circle(Point(x, y), a.distance(Point(x, y)))
-}
-
-
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
 
 /**
  * Очень сложная
