@@ -314,10 +314,7 @@ fun smth(commands: String): Map<Int, Int> {
     val brackets = mutableMapOf<Int, Int>()
     val list = mutableListOf<Int>()
 
-    if (commands.indexOf(']') < commands.indexOf('[')
-            || commands.indexOfLast { it == '[' } > commands.indexOfLast { it == '[' }
-            || commands.contains(regex = Regex("[^<>+\\[\\]\\- ]"))
-            || commands.isEmpty())
+    if (commands.contains(regex = Regex("[^<>+\\[\\]\\- ]")))
         throw IllegalArgumentException()
 
     for (i in 0 until commands.length) {
@@ -330,6 +327,6 @@ fun smth(commands: String): Map<Int, Int> {
             }
         }
     }
-    return if (commands.count { it == '[' || it == ']' } == brackets.size * 2) brackets
+    return if (list.isEmpty()) brackets
     else throw IllegalArgumentException()
 }
